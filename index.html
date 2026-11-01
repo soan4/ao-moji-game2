@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f5f1ff">
+<title>ふしぎもじ へんしんラボ</title>
+<style>
+:root{font-family:ui-rounded,"Hiragino Maru Gothic ProN","Hiragino Kaku Gothic ProN",system-ui,sans-serif;color:#322d49;background:#f6f2ff}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#ffe7dc 0,transparent 40%),radial-gradient(circle at 95% 23%,#e1e7ff 0,transparent 36%),#f6f2ff;min-height:100vh}
+.shell{max-width:560px;margin:0 auto;padding:16px 15px calc(25px + env(safe-area-inset-bottom))}header{text-align:center;margin-bottom:14px}
+h1{font-size:clamp(25px,7vw,34px);letter-spacing:.02em;margin:8px 0 4px;font-weight:900;color:#5636a6}header p{font-size:13px;color:#77718f;margin:0;font-weight:700}
+.panel{background:#fff;border:2px solid #ece6ff;border-radius:24px;padding:15px;margin-bottom:14px;box-shadow:0 7px 0 #e8e1f8}
+.fieldlabel{font-size:15px;font-weight:900;display:flex;align-items:center;gap:6px;margin-bottom:9px}.inputrow{display:flex;align-items:stretch;gap:8px}
+#word{width:100%;min-width:0;flex:1;border:3px solid #cfc4fc;border-radius:15px;font-size:18px;padding:13px 12px;outline:none;line-height:1.45;font-family:inherit;background:#fffdff;color:#3f315e}
+#word:focus{border-color:#8458fa;box-shadow:0 0 0 4px #8d65ed22}
+button{font:inherit;font-weight:900;border:0;cursor:pointer;touch-action:manipulation;-webkit-tap-highlight-color:transparent;user-select:none}
+button:focus-visible{outline:3px solid #222;outline-offset:3px}button:active{transform:translateY(3px)}
+.round{flex-shrink:0;background:#f4edff;color:#6c3fba;border-radius:15px;padding:0 13px;font-size:13px;min-width:66px}
+.note{font-size:12px;color:#7b748e;margin:8px 0 0}
+.chips{display:flex;gap:8px;margin-top:11px;flex-wrap:wrap}.chip{background:#f4f0ff;border:2px solid #e9ddff;border-radius:999px;min-width:49px;min-height:43px;font-size:19px;color:#63459e;padding:6px 12px}
+.choose{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:13px}
+.create{border-radius:19px;color:#fff;padding:14px 8px;font-size:17px;box-shadow:0 5px 0 #c5b5ed;transition:filter .15s}
+.robotbtn{background:linear-gradient(145deg,#6788ff,#8760e8)}.monsterbtn{background:linear-gradient(145deg,#38bfa7,#21a8ad)}.create:active{box-shadow:0 1px 0 #c5b5ed}
+.stage{position:relative;overflow:hidden;border-radius:25px;min-height:345px;background:radial-gradient(circle at 50% 32%,#ffffff 10%,#e8e5ff 65%,#dcdafa 100%);border:3px solid #fff;isolation:isolate}
+.stage:before{content:"";position:absolute;left:-15%;right:-15%;height:100px;bottom:-45px;background:#d5c9f4;border-radius:50%;opacity:.75}
+#character{display:block;width:100%;height:320px;position:relative;z-index:2;overflow:visible;filter:drop-shadow(0 9px 3px #7770ac40);transform-origin:50% 80%;cursor:pointer}
+#character.dance{animation:dance .65s ease-in-out 2}#character.bounce{animation:bounce .85s cubic-bezier(.2,.7,.3,1)}
+@keyframes dance{0%,100%{transform:rotate(0)}25%{transform:rotate(-9deg) translateY(-4px)}75%{transform:rotate(9deg) translateY(-8px)}}
+@keyframes bounce{0%{transform:scale(.35) translateY(170px);opacity:.1}45%{transform:scale(1.13) translateY(-21px);opacity:1}75%{transform:scale(.95)}100%{transform:scale(1)}}
+.speech{position:absolute;top:12px;left:12px;right:12px;z-index:4;text-align:center;pointer-events:none}
+.speech span{background:#fff;border:2px solid #bdb0e4;border-radius:17px;box-shadow:0 3px 0 #c4b7e0;padding:6px 13px;display:inline-block;max-width:100%;font-size:15px;font-weight:900;overflow-wrap:anywhere}
+.star{position:absolute;z-index:3;pointer-events:none;font-size:26px;animation:floatstar .9s ease-out both}@keyframes floatstar{from{opacity:1;transform:translateY(12px) scale(.6) rotate(-20deg)}to{opacity:0;transform:translateY(-100px) scale(1.5) rotate(25deg)}}
+.identity{text-align:center;padding:9px 2px 5px}.identity strong{display:block;font-size:20px;overflow-wrap:anywhere;color:#4d36a7}.identity small{display:block;font-size:13px;color:#746b88;margin-top:4px;font-weight:700}
+.actions{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px;margin-top:10px}.action{font-size:15px;background:#ffedb6;color:#76530c;border-radius:15px;padding:12px 3px;min-height:52px;box-shadow:0 4px 0 #e4d39e}.action:nth-child(2){background:#dfecff;color:#405d99;box-shadow:0 4px 0 #c2d4f2}.action:nth-child(3){background:#ffdfec;color:#a2447a;box-shadow:0 4px 0 #ecc1d4}
+.galleryheader{display:flex;align-items:center;justify-content:space-between;gap:8px}.galleryheader b{font-size:16px}.clearbtn{font-size:12px;background:transparent;color:#8a839c;text-decoration:underline}
+.gallery{display:flex;gap:8px;overflow-x:auto;padding:8px 2px 5px;scrollbar-width:thin;min-height:88px}
+.galleryitem{min-width:78px;max-width:80px;border:2px solid #e8dffb;background:#faf7ff;border-radius:15px;padding:9px 5px;text-align:center;flex:0 0 auto;color:#514578}
+.galleryitem .avatar{font-size:33px;display:block}.galleryitem .smallword{font-size:11px;display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;margin-top:4px}.empty{font-size:13px;color:#8e86a2;align-self:center;padding:12px}
+footer{text-align:center;color:#958da7;font-size:11px;padding:3px 8px 0}
+@media(max-width:375px){.shell{padding-left:10px;padding-right:10px}.panel{padding:12px}.create{font-size:15px}.actions{gap:6px}.action{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<main class="shell">
+<header><h1>🪄 ふしぎもじ へんしんラボ</h1><p>へんてこな もじから なかまが うまれる！</p></header>
+<section class="panel"><label class="fieldlabel" for="word">✏️ ふしぎな もじを いれてね</label><div class="inputrow"><input id="word" maxlength="60" value="にょならはわわょわやゆ" autocomplete="off" autocorrect="off" spellcheck="false" aria-label="ふしぎな文字"><button type="button" class="round" id="surprise">🎲<br>おまかせ</button></div>
+<div class="chips" aria-label="もじを たす"><button type="button" class="chip" data-add="にょ">にょ</button><button type="button" class="chip" data-add="わ">わ</button><button type="button" class="chip" data-add="ゆ">ゆ</button><button type="button" class="chip" data-add="☆">☆</button><button type="button" class="chip" data-add="！">！</button><button type="button" class="chip" data-add="🐾">🐾</button></div>
+<div class="choose"><button class="create robotbtn" id="makeRobot">🤖 ロボットに へんしん！</button><button class="create monsterbtn" id="makeMonster">🦖 かいじゅうに へんしん！</button></div><p class="note">おなじ もじなら おなじ かたち。もじを かえると へんしんするよ！</p></section>
+<section class="panel" aria-label="うまれたキャラクター"><div class="stage" id="stage"><div class="speech"><span id="bubble">こんにちは！</span></div><svg id="character" viewBox="0 0 360 345" role="img" aria-label="へんしんしたキャラクター"></svg></div><div class="identity"><strong id="creatureName">ふしぎな なかま</strong><small id="stats">もじの ちからを ためているよ</small></div>
+<div class="actions"><button class="action" id="dance">💃 おどる</button><button class="action" id="speak">💬 おしゃべり</button><button class="action" id="sound">🔇 おと オフ</button></div></section>
+<section class="panel"><div class="galleryheader"><b>🌟 うまれた なかまたち <span id="count">0</span></b><button type="button" id="clear" class="clearbtn">ぜんぶ けす</button></div><div id="gallery" class="gallery"><span class="empty">へんしんすると ここに ならぶよ</span></div></section>
+<footer>もじもじ だいぼうけん · いんたーねっとなしでも あそべるよ</footer>
+</main>
+<script>
+(()=>{
+'use strict';
+const $=id=>document.getElementById(id), input=$('word'), svg=$('character'), stage=$('stage'),bubble=$('bubble');
+let current={text:input.value,mode:'robot'}, sounds=false, ac=null, animateTimer=null;
+function hash(s){let h=2166136261;for(const ch of s){h^=ch.codePointAt(0);h=Math.imul(h,16777619)}return h>>>0}
+function rnd(seed,n){return ((seed>>>((n*7)%25))^(seed*13+n*769))>>>0}
+function range(seed,n,max){return rnd(seed,n)%max}
+function palette(seed){let hue=range(seed,1,360);return {base:`hsl(${hue} 76% 64%)`,dark:`hsl(${hue} 59% 40%)`,light:`hsl(${hue} 90% 85%)`,extra:`hsl(${(hue+120)%360} 78% 65%)`,gold:'#fbe16b'}}
+function robot(s){let c=palette(s),eye=range(s,2,3),head=range(s,3,3),mouth=range(s,4,3),arms=range(s,5,3),ant=range(s,6,3),mark=range(s,7,4),feet=range(s,8,3);
+let anten=`<line x1="180" y1="79" x2="180" y2="45" stroke="${c.dark}" stroke-width="10" stroke-linecap="round"/><circle cx="180" cy="41" r="12" fill="${c.extra}" stroke="${c.dark}" stroke-width="4"/>`;
+if(ant===1)anten=`<path d="M145 83 L127 52 M214 83 L233 52" stroke="${c.dark}" stroke-width="9" stroke-linecap="round"/><circle cx="125" cy="50" r="10" fill="${c.gold}"/><circle cx="235" cy="50" r="10" fill="${c.gold}"/>`;
+if(ant===2)anten=`<path d="M172 79 L153 44 L190 44 L180 79" fill="${c.extra}" stroke="${c.dark}" stroke-width="5" stroke-linejoin="round"/>`;
+let headsh=head===0?`<rect x="99" y="76" width="162" height="119" rx="31"/>`:head===1?`<path d="M103 135 Q105 74 180 73 Q255 74 257 135 L257 171 Q255 194 225 194 L133 194 Q103 193 103 165Z"/>`:`<path d="M98 95 L143 75 L220 75 L263 96 L253 189 L108 189Z"/>`;
+const eyes=eye===0?`<circle cx="147" cy="132" r="16" fill="#fff"/><circle cx="213" cy="132" r="16" fill="#fff"/><circle cx="152" cy="134" r="8" fill="#25314f"/><circle cx="217" cy="134" r="8" fill="#25314f"/>`:eye===1?`<rect x="126" y="117" width="108" height="35" rx="16" fill="#252547"/><circle cx="148" cy="134" r="11" fill="#80faff"/><circle cx="212" cy="134" r="11" fill="#80faff"/>`:`<path d="M128 127 L163 130 M197 130 L232 127" stroke="#23324a" stroke-width="13" stroke-linecap="round"/>`;
+let m=mouth===0?`<path d="M155 165 Q180 185 205 165" fill="none" stroke="#4a2a55" stroke-width="6" stroke-linecap="round"/>`:mouth===1?`<rect x="155" y="161" width="50" height="18" rx="6" fill="#4a2a55"/><path d="M167 162 V177 M180 162 V177 M193 162 V177" stroke="white" stroke-width="3"/>`:`<circle cx="180" cy="169" r="10" fill="#4a2a55"/>`;
+let a=arms===0?`<path d="M125 210 L68 226 L46 194 M235 210 L292 226 L314 194"/>`:arms===1?`<path d="M124 216 L80 251 L52 231 M236 216 L281 251 L308 231"/>`:`<path d="M124 216 L67 207 L52 242 M236 216 L294 207 L308 242"/>`;
+let badge=mark===0?`<path d="M180 212 L164 239 L178 239 L170 260 L197 230 L182 230Z" fill="${c.gold}"/>`:mark===1?`<circle cx="180" cy="237" r="21" fill="${c.extra}" stroke="#fff" stroke-width="5"/>`:mark===2?`<path d="M180 210 L189 229 L211 231 L195 246 L199 267 L180 257 L160 267 L165 246 L149 231 L170 229Z" fill="${c.gold}"/>`:`<path d="M150 223 H210 V253 H150Z" fill="${c.extra}" stroke="white" stroke-width="5"/><circle cx="180" cy="238" r="8" fill="white"/>`;
+let feetsh=feet===0?`<rect x="126" y="272" width="36" height="32" rx="9" fill="${c.dark}"/><rect x="198" y="272" width="36" height="32" rx="9" fill="${c.dark}"/>`:feet===1?`<circle cx="142" cy="289" r="20" fill="${c.dark}"/><circle cx="218" cy="289" r="20" fill="${c.dark}"/><circle cx="142" cy="289" r="9" fill="${c.light}"/><circle cx="218" cy="289" r="9" fill="${c.light}"/>`:`<path d="M125 274 H164 L161 305 H114Z M196 274 H235 L246 305 H199Z" fill="${c.dark}"/>`;
+return `<ellipse cx="180" cy="315" rx="102" ry="13" fill="#625595" opacity=".17"/>${ant}<g fill="none" stroke="${c.dark}" stroke-width="19" stroke-linecap="round" stroke-linejoin="round">${a}</g><circle cx="51" cy="228" r="18" fill="${c.extra}" stroke="${c.dark}" stroke-width="6"/><circle cx="309" cy="228" r="18" fill="${c.extra}" stroke="${c.dark}" stroke-width="6"/>${feetsh}<rect x="119" y="193" width="122" height="89" rx="23" fill="${c.base}" stroke="${c.dark}" stroke-width="7"/><rect x="131" y="205" width="98" height="64" rx="15" fill="${c.light}"/>${badge}<g fill="${c.base}" stroke="${c.dark}" stroke-width="7" stroke-linejoin="round">${headsh}</g><path d="M123 97 H236" stroke="white" stroke-opacity=".65" stroke-width="7" stroke-linecap="round"/>${eyes}${m}<circle cx="111" cy="166" r="6" fill="${c.extra}"/><circle cx="249" cy="166" r="6" fill="${c.extra}"/>`;
+}
+function monster(s){const c=palette(s),horn=range(s,2,4),eyes=range(s,3,3),teeth=range(s,4,3),wings=range(s,5,3),spots=range(s,6,3),tail=range(s,7,3),spikes=range(s,8,3);
+let horns=horn===0?`<path d="M128 110 L110 48 L165 83 M233 110 L256 48 L194 82"/>`:horn===1?`<path d="M169 83 L180 29 L192 83"/>`:horn===2?`<path d="M115 126 Q78 88 100 51 L155 91 M245 126 Q279 88 260 51 L205 91"/>`:`<path d="M128 106 L124 58 L162 88 M207 88 L239 58 L233 106"/>`;
+let wing=wings===0?`<path d="M133 183 Q81 120 47 155 L55 191 L30 215 L76 225 L107 211Z M226 183 Q280 120 313 155 L304 191 L329 215 L284 225 L253 211Z" fill="${c.extra}" stroke="${c.dark}" stroke-width="6"/>`:wings===1?`<path d="M139 222 Q66 182 54 243 L85 257 L55 272 L123 267Z M219 222 Q293 182 305 243 L276 257 L305 272 L236 267Z" fill="${c.light}" stroke="${c.dark}" stroke-width="6"/>`:'';
+let ts=tail===0?`<path d="M245 254 Q330 256 301 184 Q323 197 333 183 Q349 288 252 289Z" fill="${c.base}" stroke="${c.dark}" stroke-width="7"/>`:tail===1?`<path d="M241 267 Q331 320 314 228 L337 235 Q363 321 252 306Z" fill="${c.extra}" stroke="${c.dark}" stroke-width="7"/>`:`<path d="M245 255 Q318 230 299 192" fill="none" stroke="${c.dark}" stroke-width="22" stroke-linecap="round"/><circle cx="296" cy="189" r="17" fill="${c.extra}" stroke="${c.dark}" stroke-width="5"/>`;
+let eye=eyes===0?`<ellipse cx="153" cy="154" rx="17" ry="21" fill="white"/><ellipse cx="209" cy="154" rx="17" ry="21" fill="white"/><circle cx="158" cy="157" r="9" fill="#2d2a4c"/><circle cx="213" cy="157" r="9" fill="#2d2a4c"/>`:eyes===1?`<ellipse cx="180" cy="151" rx="34" ry="26" fill="#fff"/><circle cx="183" cy="152" r="16" fill="#2d2a4c"/><circle cx="188" cy="146" r="5" fill="#fff"/>`:`<circle cx="141" cy="152" r="11" fill="#2d2a4c"/><circle cx="180" cy="143" r="11" fill="#2d2a4c"/><circle cx="219" cy="152" r="11" fill="#2d2a4c"/>`;
+let mouth=teeth===0?`<path d="M152 189 Q180 210 209 189" fill="none" stroke="#653354" stroke-width="8" stroke-linecap="round"/>`:teeth===1?`<path d="M147 188 Q180 230 217 188Z" fill="#7a3454" stroke="#653354" stroke-width="5"/><path d="M156 193 L165 210 L174 196 M194 196 L204 211 L212 192" fill="#fff"/>`:`<ellipse cx="181" cy="195" rx="20" ry="16" fill="#71304b"/><ellipse cx="182" cy="204" rx="10" ry="5" fill="#ff8db2"/>`;
+let pattern=spots===0?`<ellipse cx="181" cy="259" rx="39" ry="48" fill="${c.light}"/>`:spots===1?`<circle cx="160" cy="253" r="10" fill="${c.extra}"/><circle cx="202" cy="250" r="10" fill="${c.extra}"/><circle cx="180" cy="282" r="11" fill="${c.extra}"/>`:`<path d="M152 242 Q180 220 207 242 M155 262 Q180 244 206 263 M158 282 Q180 267 202 283" stroke="${c.light}" stroke-width="12" fill="none" stroke-linecap="round"/>`;
+let spikesMarkup=spikes===0?`<path d="M104 153 L76 127 L102 114 L93 86 L129 94 M230 96 L263 85 L255 113 L283 128 L257 154" fill="${c.extra}" stroke="${c.dark}" stroke-width="5"/>`:spikes===1?`<circle cx="109" cy="176" r="10" fill="${c.extra}"/><circle cx="251" cy="176" r="10" fill="${c.extra}"/>`:'';
+return `<ellipse cx="180" cy="321" rx="108" ry="11" fill="#625595" opacity=".17"/>${wing}${ts}<path d="M136 274 L120 304 Q118 312 129 312 H162 L169 283 M191 283 L196 312 H232 Q242 312 239 303 L224 273" fill="${c.dark}" stroke="${c.dark}" stroke-width="5" stroke-linejoin="round"/><path d="M122 213 Q75 201 70 250 M238 213 Q287 201 292 250" fill="none" stroke="${c.dark}" stroke-width="24" stroke-linecap="round"/><circle cx="70" cy="249" r="14" fill="${c.extra}"/><circle cx="292" cy="249" r="14" fill="${c.extra}"/><g fill="${c.gold}" stroke="${c.dark}" stroke-width="5" stroke-linejoin="round">${horns}</g><path d="M180 84 Q251 78 265 152 Q271 188 248 217 Q261 271 233 295 Q184 320 127 294 Q99 275 115 218 Q88 181 97 146 Q106 85 180 84Z" fill="${c.base}" stroke="${c.dark}" stroke-width="8"/>${spikesMarkup}<ellipse cx="180" cy="256" rx="54" ry="49" fill="${c.light}" opacity=".7"/>${pattern}${eye}${mouth}<ellipse cx="123" cy="188" rx="13" ry="7" fill="#ff9fa9" opacity=".7"/><ellipse cx="237" cy="188" rx="13" ry="7" fill="#ff9fa9" opacity=".7"/>`;
+}
+function charSvg(text,mode){let s=hash(`${text}|${mode}`);return `<defs><radialGradient id="halo"><stop offset="0" stop-color="#fff" stop-opacity=".8"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient></defs><circle cx="180" cy="187" r="150" fill="url(#halo)"/>${mode==='robot'?robot(s):monster(s)}`}
+function safeRead(){try{let a=JSON.parse(localStorage.getItem('moji-lab-v1')||'[]');return Array.isArray(a)?a.filter(x=>typeof x.text==='string'&&(x.mode==='robot'||x.mode==='monster')).slice(0,18):[]}catch{return []}}
+function safeWrite(a){try{localStorage.setItem('moji-lab-v1',JSON.stringify(a))}catch{}}
+let gallery=safeRead();
+function renderGallery(){$('gallery').replaceChildren();$('count').textContent=gallery.length;if(!gallery.length){let s=document.createElement('span');s.className='empty';s.textContent='へんしんすると ここに ならぶよ';$('gallery').append(s);return}gallery.forEach(x=>{let b=document.createElement('button');b.type='button';b.className='galleryitem';let av=document.createElement('span');av.className='avatar';av.textContent=x.mode==='robot'?'🤖':'🦖';let label=document.createElement('span');label.className='smallword';label.textContent=x.text;b.append(av,label);b.addEventListener('click',()=>{input.value=x.text;transform(x.mode,false)});$('gallery').append(b)})}
+function beep(freq=370){if(!sounds)return;try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();let o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.setValueAtTime(freq,ac.currentTime);o.frequency.exponentialRampToValueAtTime(freq*1.25,ac.currentTime+.14);g.gain.setValueAtTime(.06,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.2);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+.21)}catch{}}
+function stars(){for(let i=0;i<9;i++){let s=document.createElement('span');s.className='star';s.textContent=['✨','⭐','💫','🌟'][i%4];s.style.left=`${12+Math.random()*77}%`;s.style.top=`${15+Math.random()*56}%`;s.style.animationDelay=`${Math.random()*.25}s`;stage.append(s);setTimeout(()=>s.remove(),1150)}}
+function animation(kind){clearTimeout(animateTimer);svg.classList.remove('bounce','dance');void svg.getBoundingClientRect();svg.classList.add(kind);animateTimer=setTimeout(()=>svg.classList.remove(kind),1400)}
+function makeName(text,mode){let short=Array.from(text).slice(0,7).join('');return `${short}${Array.from(text).length>7?'…':''}${mode==='robot'?'ロボ':'ゴン'}`}
+function transform(mode,save=true){let text=input.value.trim()||'ふしぎもじ';if(!input.value.trim())input.value=text;current={text,mode};let seed=hash(text+'|'+mode),power=(Array.from(text).length*7+seed%89+12);svg.innerHTML=charSvg(text,mode);svg.setAttribute('aria-label',`${makeName(text,mode)}ができたよ`);$('creatureName').textContent=makeName(text,mode);$('stats').textContent=`${mode==='robot'?'🤖 メカパワー':'🦖 ガオパワー'} ${power}　・　もじ ${Array.from(text).length}こ`;bubble.textContent=mode==='robot'?'ピピッ！ うまれたよ！':'ガオー！ なかよくしよう！';animation('bounce');stars();beep(mode==='robot'?590:270);if(save){gallery=[{text,mode},...gallery.filter(x=>!(x.text===text&&x.mode===mode))].slice(0,18);safeWrite(gallery);renderGallery()}}
+$('makeRobot').addEventListener('click',()=>transform('robot'));
+$('makeMonster').addEventListener('click',()=>transform('monster'));
+$('dance').addEventListener('click',()=>{animation('dance');bubble.textContent=current.mode==='robot'?'ガシャン ガシャン♪':'どしん どしん♪';stars();beep(440)});
+$('speak').addEventListener('click',()=>{let lines=current.mode==='robot'?['ピコピコ！','いっしょに あそぼ！','もじの パワー まんたん！','キラキラ ビーム！']:['がおがお！','ともだちに なろう！','おなか ぺこぺこ！','いっしょに あそぼ！'];bubble.textContent=lines[range(hash(current.text+Date.now()),2,lines.length)];animation('dance');beep(340)});
+$('sound').addEventListener('click',()=>{sounds=!sounds;$('sound').textContent=sounds?'🔊 おと オン':'🔇 おと オフ';beep(480)});
+svg.addEventListener('click',()=>{$('speak').click()});
+$('surprise').addEventListener('click',()=>{const chars=['にょ','わ','ぽ','が','ゆ','ぷ','あ','ぞ','！','きゅ','る','☆','にゃ','も','や','ぐ','🐾'];let n=5+Math.floor(Math.random()*9);input.value=Array.from({length:n},()=>chars[Math.floor(Math.random()*chars.length)]).join('');transform(Math.random()<.5?'robot':'monster')});
+document.querySelectorAll('[data-add]').forEach(b=>b.addEventListener('click',()=>{input.value=(input.value+b.dataset.add).slice(0,60);input.focus()}));
+input.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing){e.preventDefault();input.blur();transform(current.mode)}});
+$('clear').addEventListener('click',()=>{if(gallery.length&&confirm('なかまたちを ぜんぶ けしても いい？')){gallery=[];safeWrite(gallery);renderGallery()}});
+renderGallery();transform('robot',false);
+})();
+</script>
+</body>
+</html>
